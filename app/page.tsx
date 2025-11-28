@@ -227,6 +227,33 @@ export default function Home() {
     }
   }
 
+  const eliminaProgetto = async (progetto: Progetto) => {
+    if (!confirm(`Sei sicuro di voler eliminare il progetto "${progetto.nome}"?\n\nQuesta operazione è irreversibile e cancellerà anche tutte le selezioni e i computi associati.`)) {
+      return
+    }
+
+    try {
+      const result = await PricingEngineManual.eliminaProgetto(progetto.id)
+
+      if (!result.success) {
+        throw new Error(result.error || 'Errore sconosciuto')
+      }
+
+      alert(`Progetto "${progetto.nome}" eliminato con successo!`)
+
+      // Se il progetto eliminato era quello attivo, resetta il form
+      if (progettoSalvato?.id === progetto.id) {
+        nuovoProgetto()
+      }
+
+      // Reload projects list
+      await caricaListaProgetti()
+    } catch (error: any) {
+      console.error('Errore eliminazione progetto:', error)
+      alert('Errore nell\'eliminazione: ' + error.message)
+    }
+  }
+
   const nuovoProgetto = () => {
     setNomeProgetto('')
     setMq(90)
@@ -690,6 +717,13 @@ export default function Home() {
                               title="Duplica progetto"
                             >
                               Duplica
+                            </button>
+                            <button
+                              onClick={() => eliminaProgetto(prog)}
+                              className="text-xs bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+                              title="Elimina progetto"
+                            >
+                              Elimina
                             </button>
                           </div>
                         </div>

@@ -579,6 +579,42 @@ export class PricingEngineManual {
   }
 
   /**
+   * Elimina un progetto e tutte le sue dipendenze
+   */
+  static async eliminaProgetto(id_progetto: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      // 1. Elimina selezioni associate
+      const { error: errSelezioni } = await supabase
+        .from('ristrutturazioni_selezioni_progetto')
+        .delete()
+        .eq('id_progetto', id_progetto)
+
+      if (errSelezioni) throw errSelezioni
+
+      // 2. Elimina computi associati
+      const { error: errComputi } = await supabase
+        .from('ristrutturazioni_computi')
+        .delete()
+        .eq('progetto_id', id_progetto)
+
+      if (errComputi) throw errComputi
+
+      // 3. Elimina il progetto
+      const { error: errProgetto } = await supabase
+        .from('ristrutturazioni_progetti')
+        .delete()
+        .eq('id', id_progetto)
+
+      if (errProgetto) throw errProgetto
+
+      return { success: true }
+    } catch (error: any) {
+      console.error('Errore eliminazione progetto:', error)
+      return { success: false, error: error.message }
+    }
+  }
+
+  /**
    * Salva o aggiorna prezzo custom globale
    */
   static async salvaPrezzoCustomGlobale(
