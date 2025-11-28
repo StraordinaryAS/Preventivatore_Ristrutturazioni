@@ -68,7 +68,7 @@ export default function Home() {
   const [progettoSalvato, setProgettoSalvato] = useState<Progetto | null>(null)
   const [progettiSalvati, setProgettiSalvati] = useState<Progetto[]>([])
   const [loadingProgetti, setLoadingProgetti] = useState(false)
-  const [showProgettiList, setShowProgettiList] = useState(false)
+  const [showProgettiList, setShowProgettiList] = useState(true)
 
   // Load catalog on mount
   useEffect(() => {
@@ -368,6 +368,10 @@ export default function Home() {
         coeff_complessita: risultatoCalcolo.coeff_complessita,
         versione: 1
       })
+
+      // 5. Ricarica lista progetti per mostrare il nuovo progetto
+      await caricaListaProgetti()
+      setShowProgettiList(true) // Mostra automaticamente la lista
 
     } catch (error: any) {
       console.error('Errore calcolo:', error)
