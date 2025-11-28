@@ -65,11 +65,27 @@ export default function Home() {
 
   // Project state
   const [progettoSalvato, setProgettoSalvato] = useState<Progetto | null>(null)
+  const [progettiSalvati, setProgettiSalvati] = useState<Progetto[]>([])
+  const [loadingProgetti, setLoadingProgetti] = useState(false)
+  const [showProgettiList, setShowProgettiList] = useState(false)
 
   // Load catalog on mount
   useEffect(() => {
     caricaCatalogo()
+    caricaListaProgetti()
   }, [])
+
+  const caricaListaProgetti = async () => {
+    setLoadingProgetti(true)
+    try {
+      const progetti = await PricingEngineManual.caricaProgetti(20)
+      setProgettiSalvati(progetti)
+    } catch (error: any) {
+      console.error('Errore caricamento progetti:', error)
+    } finally {
+      setLoadingProgetti(false)
+    }
+  }
 
   const caricaCatalogo = async () => {
     setLoadingCatalogo(true)
@@ -127,6 +143,104 @@ export default function Home() {
         ? { ...v, prezzo_unitario_custom: nuovoPrezzo }
         : v
     ))
+  }
+
+  const togglePrezzoACorpo = (id_sottocategoria: string, usaACorpo: boolean) => {
+    setVociSelezionate(vociSelezionate.map(v =>
+      v.id_sottocategoria === id_sottocategoria
+        ? { ...v, usa_prezzo_a_corpo: usaACorpo, prezzo_a_corpo: usaACorpo ? (v.prezzo_a_corpo || 0) : undefined }
+        : v
+    ))
+  }
+
+  const aggiornaPrezzoACorpo = (id_sottocategoria: string, nuovoPrezzo: number) => {
+    setVociSelezionate(vociSelezionate.map(v =>
+      v.id_sottocategoria === id_sottocategoria
+        ? { ...v, prezzo_a_corpo: nuovoPrezzo }
+        : v
+    ))
+  }
+
+  const caricaProgetto = async (progetto: Progetto) => {
+    try {
+      // Load project details
+      setNomeProgetto(progetto.nome)
+      setMq(progetto.mq_totali)
+      setPiano(progetto.piano || 0)
+      setAscensore(progetto.ha_ascensore)
+      setLivelloFiniture(progetto.livello_finiture)
+
+      // Load percentages
+      setPercOneriSicurezza((progetto.perc_oneri_sicurezza || 0.02) * 100)
+      setPercSpeseGenerali((progetto.perc_spese_generali || 0.10) * 100)
+      setPercUtileImpresa((progetto.perc_utile_impresa || 0.10) * 100)
+      setImportoPraticheTecniche(progetto.pratiche_tecniche_importo || 3200)
+      setPercContingenze((progetto.perc_contingenze || 0.07) * 100)
+      setPercIVA((progetto.perc_iva || 0.10) * 100)
+
+      // Load selections
+      const { data: selezioni, error } = await supabase
+        .from('ristrutturazioni_selezioni_progetto')
+        .select(`
+          *,
+          sottocategoria:ristrutturazioni_sottocategorie(*)
+        `)
+        .eq('id_progetto', progetto.id)
+
+      if (error) throw error
+
+      const vociCaricate: VoceSelezione[] = selezioni.map((sel: any) => ({
+        id_sottocategoria: sel.id_sottocategoria,
+        quantita: sel.quantita,
+        prezzo_unitario_custom: sel.prezzo_unitario_custom,
+        prezzo_a_corpo: sel.prezzo_a_corpo,
+        usa_prezzo_a_corpo: sel.usa_prezzo_a_corpo,
+        sottocategoria: sel.sottocategoria
+      }))
+
+      setVociSelezionate(vociCaricate)
+      setProgettoSalvato(progetto)
+      setShowProgettiList(false)
+
+      alert(`Progetto "${progetto.nome}" caricato con successo!`)
+    } catch (error: any) {
+      console.error('Errore caricamento progetto:', error)
+      alert('Errore nel caricamento: ' + error.message)
+    }
+  }
+
+  const duplicaProgetto = async (progetto: Progetto) => {
+    try {
+      const nuovoNome = prompt('Nome per il nuovo progetto:', progetto.nome + ' (copia)')
+      if (!nuovoNome) return
+
+      const { progettoId } = await PricingEngineManual.duplicaProgetto(progetto.id, nuovoNome)
+
+      alert(`Progetto duplicato con successo! ID: ${progettoId}`)
+
+      // Reload projects list
+      await caricaListaProgetti()
+    } catch (error: any) {
+      console.error('Errore duplicazione progetto:', error)
+      alert('Errore nella duplicazione: ' + error.message)
+    }
+  }
+
+  const nuovoProgetto = () => {
+    setNomeProgetto('')
+    setMq(90)
+    setPiano(4)
+    setAscensore(false)
+    setLivelloFiniture('standard')
+    setPercOneriSicurezza(2)
+    setPercSpeseGenerali(10)
+    setPercUtileImpresa(10)
+    setImportoPraticheTecniche(3200)
+    setPercContingenze(7)
+    setPercIVA(10)
+    setVociSelezionate([])
+    setRisultato(null)
+    setProgettoSalvato(null)
   }
 
   const calcolaPreventivo = async () => {
@@ -248,9 +362,23 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Preventivatore Ristrutturazioni - Workflow Manuale
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-3">
             Seleziona le lavorazioni necessarie, definisci le quantità e genera il preventivo dettagliato
           </p>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+              ✓ Salva e carica progetti
+            </span>
+            <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+              ✓ Duplica preventivi
+            </span>
+            <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">
+              ✓ Prezzo a corpo
+            </span>
+            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+              ✓ Percentuali economiche editabili
+            </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -430,6 +558,84 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Saved Projects List */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  I Miei Progetti ({progettiSalvati.length})
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={nuovoProgetto}
+                    className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                  >
+                    + Nuovo
+                  </button>
+                  <button
+                    onClick={() => setShowProgettiList(!showProgettiList)}
+                    className="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+                  >
+                    {showProgettiList ? 'Nascondi' : 'Mostra'}
+                  </button>
+                </div>
+              </div>
+
+              {progettoSalvato && (
+                <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-md">
+                  <p className="text-sm text-green-800">
+                    ✓ Progetto attivo: <strong>{progettoSalvato.nome}</strong>
+                  </p>
+                </div>
+              )}
+
+              {showProgettiList && (
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {loadingProgetti ? (
+                    <p className="text-gray-500 text-sm">Caricamento...</p>
+                  ) : progettiSalvati.length === 0 ? (
+                    <p className="text-gray-500 text-sm">Nessun progetto salvato</p>
+                  ) : (
+                    progettiSalvati.map((prog) => (
+                      <div
+                        key={prog.id}
+                        className="p-3 border border-gray-200 rounded-md hover:bg-gray-50"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h3 className="font-medium text-gray-800">{prog.nome}</h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(prog.created_at).toLocaleDateString('it-IT')} • {prog.mq_totali}mq • {prog.livello_finiture}
+                            </p>
+                            {prog.duplicato_da && (
+                              <p className="text-xs text-blue-600 mt-1">
+                                🔗 Duplicato da: {prog.duplicato_da}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex gap-1 ml-2">
+                            <button
+                              onClick={() => caricaProgetto(prog)}
+                              className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+                              title="Carica progetto"
+                            >
+                              Carica
+                            </button>
+                            <button
+                              onClick={() => duplicaProgetto(prog)}
+                              className="text-xs bg-purple-600 text-white px-2 py-1 rounded hover:bg-purple-700"
+                              title="Duplica progetto"
+                            >
+                              Duplica
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Selected Items Summary */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-semibold mb-4 text-gray-800">
@@ -559,6 +765,7 @@ export default function Home() {
                     <tr>
                       <th className="text-left p-3">Codice</th>
                       <th className="text-left p-3">Descrizione</th>
+                      <th className="text-center p-3">A Corpo</th>
                       <th className="text-center p-3">Quantità</th>
                       <th className="text-center p-3">U.M.</th>
                       <th className="text-right p-3">Prezzo Unit.</th>
@@ -569,37 +776,73 @@ export default function Home() {
                   <tbody>
                     {vociSelezionate.map((voce) => {
                       const dettaglioVoce = risultato.dettaglio_voci.find(d => d.id_sottocategoria === voce.id_sottocategoria)
+                      const usaACorpo = voce.usa_prezzo_a_corpo || false
                       return (
                         <tr key={voce.id_sottocategoria} className="border-t border-gray-200">
                           <td className="p-3 font-mono text-xs">{voce.sottocategoria?.codice}</td>
                           <td className="p-3">{voce.sottocategoria?.nome}</td>
-                          <td className="p-3">
+                          <td className="p-3 text-center">
                             <input
-                              type="number"
-                              min="0"
-                              step="0.01"
-                              value={voce.quantita}
-                              onChange={(e) => aggiornaQuantita(voce.id_sottocategoria, Number(e.target.value))}
-                              className="w-20 px-2 py-1 border border-gray-300 rounded text-center"
+                              type="checkbox"
+                              checked={usaACorpo}
+                              onChange={(e) => togglePrezzoACorpo(voce.id_sottocategoria, e.target.checked)}
+                              className="w-4 h-4 cursor-pointer"
+                              title="Prezzo totale a corpo (ignora quantità)"
                             />
                           </td>
-                          <td className="p-3 text-center">{voce.sottocategoria?.unita_misura}</td>
+                          <td className="p-3">
+                            {usaACorpo ? (
+                              <span className="text-gray-400 text-center block">—</span>
+                            ) : (
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={voce.quantita}
+                                onChange={(e) => aggiornaQuantita(voce.id_sottocategoria, Number(e.target.value))}
+                                className="w-20 px-2 py-1 border border-gray-300 rounded text-center"
+                              />
+                            )}
+                          </td>
+                          <td className="p-3 text-center">
+                            {usaACorpo ? 'a corpo' : voce.sottocategoria?.unita_misura}
+                          </td>
                           <td className="p-3 text-right">
-                            €{dettaglioVoce?.prezzo_unitario_base.toFixed(2) || '0.00'}
+                            {usaACorpo ? (
+                              <span className="text-gray-400">—</span>
+                            ) : (
+                              `€${dettaglioVoce?.prezzo_unitario_base.toFixed(2) || '0.00'}`
+                            )}
                           </td>
                           <td className="p-3">
-                            <input
-                              type="number"
-                              min="0"
-                              step="0.01"
-                              value={voce.prezzo_unitario_custom || ''}
-                              onChange={(e) => aggiornaPrezzoCustom(voce.id_sottocategoria, e.target.value ? Number(e.target.value) : undefined)}
-                              placeholder="Opzionale"
-                              className="w-24 px-2 py-1 border border-gray-300 rounded text-right"
-                            />
+                            {usaACorpo ? (
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={voce.prezzo_a_corpo || ''}
+                                onChange={(e) => aggiornaPrezzoACorpo(voce.id_sottocategoria, Number(e.target.value))}
+                                placeholder="Prezzo totale"
+                                className="w-24 px-2 py-1 border border-indigo-300 bg-indigo-50 rounded text-right font-semibold"
+                              />
+                            ) : (
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={voce.prezzo_unitario_custom || ''}
+                                onChange={(e) => aggiornaPrezzoCustom(voce.id_sottocategoria, e.target.value ? Number(e.target.value) : undefined)}
+                                placeholder="Opzionale"
+                                className="w-24 px-2 py-1 border border-gray-300 rounded text-right"
+                              />
+                            )}
                           </td>
                           <td className="p-3 text-right font-semibold">
-                            €{((voce.prezzo_unitario_custom || dettaglioVoce?.prezzo_unitario_base || 0) * voce.quantita).toFixed(2)}
+                            {usaACorpo ? (
+                              <span className="text-indigo-600">€{(voce.prezzo_a_corpo || 0).toFixed(2)}</span>
+                            ) : (
+                              `€${((voce.prezzo_unitario_custom || dettaglioVoce?.prezzo_unitario_base || 0) * voce.quantita).toFixed(2)}`
+                            )}
                           </td>
                         </tr>
                       )

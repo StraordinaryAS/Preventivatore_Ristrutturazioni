@@ -2,6 +2,77 @@
 
 ## [Unreleased] - 2025-11-28
 
+### 🎨 UI Implementation - Session 2
+
+#### Nuove Sezioni UI Implementate
+
+**1. Gestione Progetti Salvati**
+- Sezione "I Miei Progetti" con lista progetti
+- Bottone "Nuovo" per resettare form e iniziare nuovo progetto
+- Bottone "Mostra/Nascondi" per espandere/collassare lista
+- Indicatore progetto attivo con badge verde
+- Auto-load lista progetti all'avvio dell'app (ultimi 20)
+- Cards con info: nome, data, mq, livello finiture, origine duplicazione
+
+**2. Pulsanti Azione Progetti**
+- **Carica**: Ripristina tutti i dati del progetto (info base, percentuali, selezioni)
+- **Duplica**: Crea copia completa con prompt per nuovo nome
+- Reload automatico lista dopo duplicazione
+
+**3. Prezzo a Corpo**
+- Checkbox "A Corpo" nella tabella quantità/prezzi
+- Quando attivo:
+  - Disabilita campo quantità (mostra "—")
+  - Cambia unità misura in "a corpo"
+  - Disabilita prezzo unitario (mostra "—")
+  - Campo "Prezzo Custom" diventa "Prezzo totale" con stile evidenziato (bordo indigo, sfondo indigo-50)
+  - Subtotale mostra prezzo a corpo con colore indigo
+- Quando disattivo: comportamento normale con quantità × prezzo unitario
+
+**4. Badge Features Header**
+- 4 badge nel header che mostrano le features disponibili:
+  - ✓ Salva e carica progetti (verde)
+  - ✓ Duplica preventivi (viola)
+  - ✓ Prezzo a corpo (indigo)
+  - ✓ Percentuali economiche editabili (blu)
+
+#### Funzioni JavaScript Aggiunte
+
+```typescript
+// Gestione progetti
+caricaListaProgetti(): Promise<void>
+caricaProgetto(progetto: Progetto): Promise<void>
+duplicaProgetto(progetto: Progetto): Promise<void>
+nuovoProgetto(): void
+
+// Prezzo a corpo
+togglePrezzoACorpo(id_sottocategoria: string, usaACorpo: boolean): void
+aggiornaPrezzoACorpo(id_sottocategoria: string, nuovoPrezzo: number): void
+```
+
+#### State Management
+
+Nuovo state aggiunto:
+```typescript
+const [progettiSalvati, setProgettiSalvati] = useState<Progetto[]>([])
+const [loadingProgetti, setLoadingProgetti] = useState(false)
+const [showProgettiList, setShowProgettiList] = useState(false)
+```
+
+#### UX Improvements
+
+- Alert di successo quando progetto viene caricato
+- Alert di successo quando progetto viene duplicato
+- Prompt per nome quando si duplica progetto (default: "Nome (copia)")
+- Loading state durante caricamento progetti
+- Placeholder "Nessun progetto salvato" se lista vuota
+- Tooltip su checkbox prezzo a corpo: "Prezzo totale a corpo (ignora quantità)"
+- Colori distintivi per differenziare prezzo a corpo da prezzo normale
+
+---
+
+## [Session 1] - 2025-11-28
+
 ### 🎉 Nuove Funzionalità Maggiori
 
 #### 1. Percentuali Economiche Editabili
