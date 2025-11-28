@@ -143,6 +143,33 @@ const [showProgettiList, setShowProgettiList] = useState(false)
 
 🎉 **Applicazione MVP Completa al 100%!**
 
+#### 🔄 Sistema Versioning Progetti
+
+**8. Versioning Automatico**
+- **Nessun progetto può avere lo stesso nome**
+- Sistema di versioning automatico quando salvi con nome esistente
+- Formato: `Nome Progetto v2`, `Nome Progetto v3`, etc.
+- Alert informativo quando viene creata una nuova versione
+- Badge "Versione" arancione nella lista progetti per versioni
+- Tracciamento origine con `duplicato_da`: "Aggiornamento di: Nome Originale"
+- **Ogni calcolo crea sempre un NUOVO progetto** (mai update di esistenti)
+- Nome del progetto aggiornato automaticamente nel form dopo il salvataggio
+
+**Workflow Versioning:**
+1. Crei preventivo "Appartamento Via Roma"
+2. Salvi → crea progetto con quel nome
+3. Carichi il progetto e modifichi qualcosa
+4. Salvi → crea automaticamente "Appartamento Via Roma v2"
+5. Alert: "Esisteva già un progetto con nome 'Appartamento Via Roma'. Creata nuova versione: 'Appartamento Via Roma v2'"
+6. Il nuovo progetto traccia l'origine nel campo `duplicato_da`
+
+**Vantaggi:**
+- ✅ Storico completo di tutte le modifiche
+- ✅ Nessun rischio di sovrascrivere preventivi precedenti
+- ✅ Data creazione sempre aggiornata (ogni versione = nuovo timestamp)
+- ✅ Facile identificazione versioni nella lista (badge arancione)
+- ✅ Possibilità di confrontare versioni diverse dello stesso progetto
+
 ---
 
 ## [Session 1] - 2025-11-28

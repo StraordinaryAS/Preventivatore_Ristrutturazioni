@@ -257,11 +257,52 @@ export default function Home() {
 
     setCalculating(true)
     try {
-      // 1. Crea o aggiorna progetto
+      // 1. Verifica se esiste già un progetto con questo nome (escludendo quello attualmente caricato)
+      const { data: progettiEsistenti, error: checkError } = await supabase
+        .from('ristrutturazioni_progetti')
+        .select('nome')
+        .ilike('nome', nomeProgetto.trim())
+
+      if (checkError) throw checkError
+
+      let nomeFinale = nomeProgetto.trim()
+
+      // Se c'è già un progetto con questo nome e non stiamo modificando quello stesso
+      if (progettiEsistenti && progettiEsistenti.length > 0) {
+        // Se stiamo modificando un progetto caricato con lo stesso nome, crea una nuova versione
+        if (!progettoSalvato || progettoSalvato.nome !== nomeProgetto.trim()) {
+          // Conta quante versioni esistono già
+          const { data: versioni, error: versionError } = await supabase
+            .from('ristrutturazioni_progetti')
+            .select('nome')
+            .or(`nome.eq.${nomeFinale},nome.like.${nomeFinale} v%`)
+
+          if (versionError) throw versionError
+
+          // Trova il numero di versione più alto
+          let maxVersion = 1
+          if (versioni) {
+            versioni.forEach(p => {
+              const match = p.nome.match(/v(\d+)$/)
+              if (match) {
+                const version = parseInt(match[1])
+                if (version > maxVersion) {
+                  maxVersion = version
+                }
+              }
+            })
+          }
+
+          // Crea nome con versione incrementata
+          nomeFinale = `${nomeFinale} v${maxVersion + 1}`
+        }
+      }
+
+      // 2. Crea sempre un NUOVO progetto (non aggiornare mai uno esistente)
       const progettoData: Partial<Progetto> = {
-        nome: nomeProgetto,
+        nome: nomeFinale,
         mq_totali: mq,
-        numero_bagni: 1, // Non più usato per calcolo, solo per info
+        numero_bagni: 1,
         numero_cucine: 1,
         piano: piano,
         ha_ascensore: ascensore,
@@ -274,34 +315,27 @@ export default function Home() {
         perc_utile_impresa: percUtileImpresa / 100,
         pratiche_tecniche_importo: importoPraticheTecniche,
         perc_contingenze: percContingenze / 100,
-        perc_iva: percIVA / 100
+        perc_iva: percIVA / 100,
+        // Se stiamo salvando una modifica, traccia l'originale
+        progetto_originale_id: progettoSalvato?.id,
+        duplicato_da: progettoSalvato ? `Aggiornamento di: ${progettoSalvato.nome}` : undefined
       }
 
-      let progetto: Progetto
+      const { data: progetto, error } = await supabase
+        .from('ristrutturazioni_progetti')
+        .insert(progettoData)
+        .select()
+        .single()
 
-      if (progettoSalvato) {
-        // Aggiorna progetto esistente
-        const { data, error } = await supabase
-          .from('ristrutturazioni_progetti')
-          .update(progettoData)
-          .eq('id', progettoSalvato.id)
-          .select()
-          .single()
+      if (error) throw error
 
-        if (error) throw error
-        progetto = data
-      } else {
-        // Crea nuovo progetto
-        const { data, error } = await supabase
-          .from('ristrutturazioni_progetti')
-          .insert(progettoData)
-          .select()
-          .single()
-
-        if (error) throw error
-        progetto = data
-        setProgettoSalvato(data)
+      // Notifica se è stata creata una nuova versione
+      if (nomeFinale !== nomeProgetto.trim()) {
+        alert(`⚠️ Esisteva già un progetto con nome "${nomeProgetto.trim()}".\nCreata nuova versione: "${nomeFinale}"`)
       }
+
+      setProgettoSalvato(progetto)
+      setNomeProgetto(nomeFinale) // Aggiorna il nome nel form con la versione
 
       // 2. Salva selezioni
       const salvaResult = await PricingEngineManual.salvaSelezioni(
@@ -621,13 +655,20 @@ export default function Home() {
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="font-medium text-gray-800">{prog.nome}</h3>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-medium text-gray-800">{prog.nome}</h3>
+                              {prog.nome.match(/v\d+$/) && (
+                                <span className="text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded">
+                                  Versione
+                                </span>
+                              )}
+                            </div>
                             <p className="text-xs text-gray-500 mt-1">
                               {new Date(prog.created_at).toLocaleDateString('it-IT')} • {prog.mq_totali}mq • {prog.livello_finiture}
                             </p>
                             {prog.duplicato_da && (
                               <p className="text-xs text-blue-600 mt-1">
-                                🔗 Duplicato da: {prog.duplicato_da}
+                                🔗 {prog.duplicato_da}
                               </p>
                             )}
                           </div>
