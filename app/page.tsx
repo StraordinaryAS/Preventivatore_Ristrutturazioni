@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react'
 import { supabase, type Progetto } from '@/lib/supabase'
 import { PricingEngineManual, type VoceDettaglio, type CalcoloManualResult } from '@/lib/pricing-engine-manual'
+import Link from 'next/link'
 
 interface CategoriaConSottocategorie {
   id: string
@@ -359,12 +360,30 @@ export default function Home() {
 
         {/* Header */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Preventivatore Ristrutturazioni - Workflow Manuale
-          </h1>
-          <p className="text-gray-600 mb-3">
-            Seleziona le lavorazioni necessarie, definisci le quantità e genera il preventivo dettagliato
-          </p>
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                Preventivatore Ristrutturazioni - Workflow Manuale
+              </h1>
+              <p className="text-gray-600 mb-3">
+                Seleziona le lavorazioni necessarie, definisci le quantità e genera il preventivo dettagliato
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Link
+                href="/prezzi"
+                className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 text-sm"
+              >
+                💰 Prezzi Custom
+              </Link>
+              <Link
+                href="/admin/prezzario"
+                className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700 text-sm"
+              >
+                ⚙️ Admin Prezzario
+              </Link>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-2 text-sm">
             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
               ✓ Salva e carica progetti

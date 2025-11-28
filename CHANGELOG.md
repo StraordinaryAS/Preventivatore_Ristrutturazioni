@@ -69,6 +69,80 @@ const [showProgettiList, setShowProgettiList] = useState(false)
 - Tooltip su checkbox prezzo a corpo: "Prezzo totale a corpo (ignora quantità)"
 - Colori distintivi per differenziare prezzo a corpo da prezzo normale
 
+#### 🚀 Pagine Amministrazione Complete
+
+**5. Pagina `/prezzi` - Prezzi Custom Globali**
+- Tabella completa con tutte le sottocategorie del prezzario
+- Filtri per categoria e ricerca
+- Toggle per mostrare solo voci con prezzo custom
+- Input per modificare prezzi economy/standard/premium
+- Bottoni Salva/Reset per ogni voce
+- Evidenziazione voci con prezzo custom (sfondo giallo)
+- Info box con spiegazione priorità prezzi
+- I prezzi custom vengono ricordati tra preventivi
+
+**6. Pagina `/admin/prezzario` - Gestione Prezzario CRUD**
+- Lista categorie con sottocategorie collassabili
+- **Categorie**:
+  - Crea nuova categoria (codice, nome, descrizione)
+  - Modifica categoria esistente (nome, descrizione)
+  - Elimina categoria (con protezione se ha sottocategorie)
+  - Toggle attiva/disattiva (soft delete)
+- **Sottocategorie**:
+  - Crea nuova sottocategoria (tutti i campi)
+  - Modifica sottocategoria esistente
+  - Elimina sottocategoria
+  - Toggle attiva/disattiva
+  - Checkbox "Applica coefficiente accesso"
+- Modali per form di creazione/modifica
+- Protezione eliminazione categoria con sottocategorie
+- Conferma prima di eliminazioni
+- Indicatore visivo per voci disattivate (opacità)
+
+**7. Link Navigazione Header**
+- Bottone "💰 Prezzi Custom" per accesso rapido
+- Bottone "⚙️ Admin Prezzario" per gestione catalogo
+- Tutti con link "← Home" / "← Torna ai Preventivi"
+
+#### 📊 Workflow Completo Ora Disponibile
+
+**User Workflow:**
+1. Crea preventivo selezionando lavorazioni
+2. Modifica quantità e prezzi custom progetto
+3. Imposta prezzo a corpo se necessario
+4. Personalizza percentuali economiche
+5. Calcola e salva automaticamente
+6. Carica progetti precedenti
+7. Duplica per preventivi simili
+
+**Admin Workflow:**
+1. Accedi a `/prezzi` per impostare prezzi custom globali
+2. Modifica prezzi per livello finiture
+3. Salva e i prezzi vengono applicati automaticamente
+4. Accedi a `/admin/prezzario` per gestire catalogo
+5. Crea/modifica/elimina categorie e sottocategorie
+6. Toggle attiva/disattiva per nascondere voci obsolete
+
+#### 📝 Files Creati
+
+- `app/prezzi/page.tsx` (NEW - 420 righe)
+- `app/admin/prezzario/page.tsx` (NEW - 680 righe)
+- `app/page.tsx` (MODIFIED - aggiunti link navigazione)
+
+#### ✅ Tutte le Features Implementate
+
+| Feature | Backend | UI | Status |
+|---------|---------|-----|--------|
+| Percentuali editabili | ✅ | ✅ | **Completo** |
+| Salva progetto | ✅ | ✅ | **Completo** |
+| Carica progetto | ✅ | ✅ | **Completo** |
+| Duplica progetto | ✅ | ✅ | **Completo** |
+| Prezzo a corpo | ✅ | ✅ | **Completo** |
+| Prezzi custom globali | ✅ | ✅ | **Completo** |
+| Gestione prezzario (CRUD) | ✅ | ✅ | **Completo** |
+
+🎉 **Applicazione MVP Completa al 100%!**
+
 ---
 
 ## [Session 1] - 2025-11-28
