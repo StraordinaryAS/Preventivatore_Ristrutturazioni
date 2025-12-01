@@ -6,7 +6,7 @@
  * Pagina per visualizzare e modificare un preventivo esistente
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase, type Progetto } from '@/lib/supabase'
 import { PricingEngineManual, type VoceDettaglio, type CalcoloManualResult } from '@/lib/pricing-engine-manual'
@@ -35,8 +35,11 @@ interface VoceSelezione extends VoceDettaglio {
   sottocategoria?: any
 }
 
-export default function VisualizzaPreventivo({ params }: { params: { id: string } }) {
+export default function VisualizzaPreventivo({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
+
+  // Unwrap params (Next.js 15+)
+  const { id } = use(params)
 
   // View/Edit mode
   const [isEditMode, setIsEditMode] = useState(false)
@@ -72,11 +75,11 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
 
   // Load project on mount
   useEffect(() => {
-    if (params.id) {
+    if (id) {
       caricaProgettoCompleto()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id])
+  }, [id])
 
   const caricaProgettoCompleto = async () => {
     setLoading(true)
@@ -85,7 +88,7 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
       const { data: progettoData, error: progettoError } = await supabase
         .from('ristrutturazioni_progetti')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', id)
         .single()
 
       if (progettoError) throw progettoError
@@ -113,7 +116,7 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
           *,
           sottocategoria:ristrutturazioni_sottocategorie(*)
         `)
-        .eq('id_progetto', params.id)
+        .eq('id_progetto', id)
 
       if (selezioniError) throw selezioniError
 
@@ -342,7 +345,7 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
         const { error: updateError } = await supabase
           .from('ristrutturazioni_progetti')
           .update(progettoData)
-          .eq('id', params.id)
+          .eq('id', id)
 
         if (updateError) throw updateError
 
@@ -350,10 +353,10 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
         await supabase
           .from('ristrutturazioni_selezioni_progetto')
           .delete()
-          .eq('id_progetto', params.id)
+          .eq('id_progetto', id)
 
         // Save new selections
-        await PricingEngineManual.salvaSelezioni(params.id, vociSelezionate)
+        await PricingEngineManual.salvaSelezioni(id, vociSelezionate)
 
         // Recalculate
         const risultatoCalcolo = await PricingEngineManual.calcolaPreventivoDaSelezioni({
@@ -365,11 +368,11 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
         await supabase
           .from('ristrutturazioni_computi')
           .delete()
-          .eq('progetto_id', params.id)
+          .eq('progetto_id', id)
 
         // Save new computo
         await supabase.from('ristrutturazioni_computi').insert({
-          progetto_id: params.id,
+          progetto_id: id,
           lavori_base: risultatoCalcolo.lavori_base,
           oneri_sicurezza: risultatoCalcolo.oneri_sicurezza,
           spese_generali: risultatoCalcolo.spese_generali,
@@ -418,7 +421,7 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
     }
 
     try {
-      const result = await PricingEngineManual.eliminaProgetto(params.id)
+      const result = await PricingEngineManual.eliminaProgetto(id)
 
       if (!result.success) {
         throw new Error(result.error || 'Errore sconosciuto')
@@ -438,7 +441,7 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
     if (!nuovoNome) return
 
     try {
-      const { progettoId } = await PricingEngineManual.duplicaProgetto(params.id, nuovoNome)
+      const { progettoId } = await PricingEngineManual.duplicaProgetto(id, nuovoNome)
       alert('Progetto duplicato con successo!')
       router.push(`/preventivo/${progettoId}`)
     } catch (error: any) {
