@@ -72,7 +72,10 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
 
   // Load project on mount
   useEffect(() => {
-    caricaProgettoCompleto()
+    if (params.id) {
+      caricaProgettoCompleto()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id])
 
   const caricaProgettoCompleto = async () => {
@@ -126,12 +129,18 @@ export default function VisualizzaPreventivo({ params }: { params: { id: string 
       setVociSelezionate(vociCaricate)
 
       // Load calculation result
-      const risultatoCalcolo = await PricingEngineManual.calcolaPreventivoDaSelezioni(progettoData)
-      setRisultato(risultatoCalcolo)
+      try {
+        const risultatoCalcolo = await PricingEngineManual.calcolaPreventivoDaSelezioni(progettoData)
+        setRisultato(risultatoCalcolo)
+      } catch (calcError: any) {
+        console.error('Errore calcolo preventivo:', calcError)
+        // Non bloccare il caricamento se il calcolo fallisce
+        setRisultato(null)
+      }
 
     } catch (error: any) {
       console.error('Errore caricamento progetto:', error)
-      alert('Errore nel caricamento: ' + error.message)
+      alert('Errore nel caricamento del progetto: ' + error.message)
       router.push('/')
     } finally {
       setLoading(false)
