@@ -441,9 +441,9 @@ export default function VisualizzaPreventivo({ params }: { params: Promise<{ id:
     if (!nuovoNome) return
 
     try {
-      const { progettoId } = await PricingEngineManual.duplicaProgetto(id, nuovoNome)
+      const { nuovo_progetto_id } = await PricingEngineManual.duplicaProgetto(id, nuovoNome)
       alert('Progetto duplicato con successo!')
-      router.push(`/preventivo/${progettoId}`)
+      router.push(`/preventivo/${nuovo_progetto_id}`)
     } catch (error: any) {
       console.error('Errore duplicazione:', error)
       alert('Errore nella duplicazione: ' + error.message)

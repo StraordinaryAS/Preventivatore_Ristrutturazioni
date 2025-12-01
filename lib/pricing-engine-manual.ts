@@ -15,6 +15,9 @@ import {
   type PrezzoCustom
 } from './supabase'
 
+// Re-export types needed by other modules
+export type { PrezzoCustom }
+
 export interface CalcoloManualResult {
   lavori_base: number
   oneri_sicurezza: number

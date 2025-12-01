@@ -206,7 +206,6 @@ export default function AdminPrezzarioPage() {
           prezzo_economy: formSottocat.prezzo_economy ? Number(formSottocat.prezzo_economy) : undefined,
           prezzo_standard: formSottocat.prezzo_standard ? Number(formSottocat.prezzo_standard) : undefined,
           prezzo_premium: formSottocat.prezzo_premium ? Number(formSottocat.prezzo_premium) : undefined,
-          note: formSottocat.note || undefined,
           applica_f_accesso: formSottocat.applica_f_accesso
         })
         alert('Sottocategoria modificata con successo!')
@@ -225,7 +224,6 @@ export default function AdminPrezzarioPage() {
           formSottocat.prezzo_economy ? Number(formSottocat.prezzo_economy) : undefined,
           formSottocat.prezzo_premium ? Number(formSottocat.prezzo_premium) : undefined,
           formSottocat.descrizione || undefined,
-          formSottocat.note || undefined,
           formSottocat.applica_f_accesso
         )
         alert('Sottocategoria creata con successo!')
