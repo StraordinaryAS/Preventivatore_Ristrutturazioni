@@ -1,6 +1,207 @@
 # Changelog - Preventivatore Ristrutturazioni
 
-## [Unreleased] - 2025-11-28
+## [v1.1.0] - 2025-12-01 - DEPLOYED ✅
+
+### 🚀 Deployment Produzione Completato
+
+**URL Produzione:** https://preventivatore-ristrutturazioni.geko-it.com
+
+#### Deployment Configuration
+- ✅ Repository GitHub collegato a Vercel
+- ✅ Auto-deploy su push branch `main`
+- ✅ DNS Infomaniak configurato (CNAME → vercel)
+- ✅ SSL automatico attivato (Let's Encrypt)
+- ✅ Environment variables Supabase configurate
+- ✅ Supabase Authentication URLs aggiornate
+
+#### Build Verificato
+```
+✓ Compiled successfully (Next.js 15.5.6)
+✓ Linting and checking validity of types
+✓ Generating static pages (7/7)
+✓ Finalizing page optimization
+
+Total Routes: 7
+- 6 Static pages
+- 1 Dynamic page (preventivo/[id])
+First Load JS: 102 kB shared
+```
+
+### 🏗️ Refactoring Architettura 3-Page
+
+**Motivazione:** Separazione completa tra dashboard e editor preventivi.
+
+#### Struttura Finale
+```
+app/
+├── page.tsx                    # Dashboard lista progetti (228 righe)
+├── preventivo/
+│   ├── nuovo/
+│   │   └── page.tsx           # Form nuovo preventivo (920 righe)
+│   └── [id]/
+│       └── page.tsx           # Vista/Modifica progetto (1165 righe)
+```
+
+**Riduzione complessità:**
+- File monolitico: 1042 righe → 3 file separati
+- Dashboard: 228 righe (-78%)
+- Nuovo: 920 righe (logica isolata)
+- Dettaglio: 1165 righe (due modalità view/edit)
+
+#### Dashboard (app/page.tsx)
+- Lista progetti con card informative
+- Info: Nome, MQ, Piano, Ascensore, Finiture, Data
+- Badge "Versione" per progetti v2, v3, v4...
+- Campo "Aggiornamento di:" per tracciamento origine
+- Bottoni: Visualizza, Duplica, Elimina
+- Links: Nuovo Preventivo, Prezzi Custom, Admin Prezzario
+
+#### Form Nuovo Preventivo (app/preventivo/nuovo/page.tsx)
+- Form completo dati base + percentuali economiche
+- Selezione categorie → sottocategorie → quantità
+- Tabella prezzi con custom + prezzo a corpo
+- Calcolo real-time con breakdown categorie
+- Versioning automatico su save (v2, v3, v4...)
+- Redirect a `/preventivo/[id]` dopo salvataggio
+
+#### Vista/Modifica Progetto (app/preventivo/[id]/page.tsx)
+
+**Modalità Vista (default - mode=view):**
+- Read-only con tutti i dati
+- Tabella voci selezionate + prezzi finali
+- Breakdown categorie
+- Riepilogo economico completo
+- Bottoni: Modifica, Duplica, Elimina, Torna Dashboard
+
+**Modalità Modifica (mode=edit):**
+- Form editabile completo (clone di "nuovo")
+- Pre-popolato con dati esistenti
+- Versioning automatico su save
+- Alert quando viene creata nuova versione
+- Redirect a `/preventivo/[nuovo_id]?mode=view`
+
+### 🔧 Fix TypeScript per Deployment
+
+Risolti 4 errori TypeScript che bloccavano build Vercel:
+
+**1. app/admin/prezzario/page.tsx:209** - Campo 'note' inesistente
+```typescript
+// ❌ PRIMA (errore)
+await modificaSottocategoria(id, {
+  nome, unita_misura, ...,
+  note: formData.note  // Campo non esistente nel metodo
+})
+
+// ✅ DOPO (fix)
+await modificaSottocategoria(id, {
+  nome, unita_misura, ...
+  // Campo 'note' rimosso
+})
+```
+
+**2. app/admin/prezzario/page.tsx:227** - Troppi argomenti (10 invece di 9)
+```typescript
+// ❌ PRIMA (errore)
+await creaNuovaSottocategoria(
+  id_categoria, codice, nome, unita_misura,
+  prezzo_standard, prezzo_economy, prezzo_premium,
+  descrizione,
+  formData.note,  // Argomento extra non previsto
+  applica_f_accesso
+)
+
+// ✅ DOPO (fix)
+await creaNuovaSottocategoria(
+  id_categoria, codice, nome, unita_misura,
+  prezzo_standard, prezzo_economy, prezzo_premium,
+  descrizione,
+  applica_f_accesso  // 9 argomenti corretti
+)
+```
+
+**3. app/preventivo/[id]/page.tsx:444** - Property name mismatch
+```typescript
+// ❌ PRIMA (errore)
+const { progettoId } = await duplicaProgetto(id, nome)
+router.push(`/preventivo/${progettoId}`)
+
+// ✅ DOPO (fix)
+const { nuovo_progetto_id } = await duplicaProgetto(id, nome)
+router.push(`/preventivo/${nuovo_progetto_id}`)
+```
+
+**4. app/prezzi/page.tsx:11** - Type non esportato
+```typescript
+// ❌ PRIMA (errore in lib/pricing-engine-manual.ts)
+import { type PrezzoCustom } from './supabase'
+// Non re-esportato
+
+// ✅ DOPO (fix)
+import { type PrezzoCustom } from './supabase'
+export type { PrezzoCustom }  // Re-export aggiunto
+```
+
+### ⚠️ Breaking Changes - Next.js 15
+
+**Params ora è Promise in dynamic routes:**
+
+```typescript
+// ❌ VECCHIO (Next.js 14)
+export default function Page({ params }: { params: { id: string } }) {
+  useEffect(() => {
+    loadData(params.id)
+  }, [params.id])
+}
+
+// ✅ NUOVO (Next.js 15+)
+import { use } from 'react'
+
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)  // Unwrap Promise con React.use()
+
+  useEffect(() => {
+    loadData(id)
+  }, [id])  // Usa 'id', non 'params.id'
+}
+```
+
+**Errore console se non corretto:**
+```
+A param property was accessed directly with `params.id`.
+`params` is now a Promise and should be unwrapped with `React.use()`
+```
+
+### 🧹 Repository Cleanup
+
+File rimossi dopo refactoring:
+- `app/page-old.tsx` (backup obsoleto)
+- `app/page-auto-old.tsx` (sistema automatico deprecato)
+- `app/page-before-refactoring.tsx` (backup pre-refactoring, 1042 righe)
+- `BRANCH_SUMMARY.md` (doc branch feature-refactoring, ormai merged)
+
+Totale righe eliminate: ~2100 righe di codice duplicato
+
+### 📦 Git Workflow
+
+```bash
+# Branch feature-refactoring creato e completato
+git checkout -b feature-refactoring
+# ... sviluppo refactoring ...
+git add .
+git commit -m "refactor: split monolithic page into 3-page architecture"
+
+# Merge to main
+git checkout main
+git merge feature-refactoring
+git branch -d feature-refactoring
+
+# Push e deploy
+git push origin main  # → Trigger Vercel auto-deploy
+```
+
+---
+
+## [v1.0.0] - 2025-11-28
 
 ### 🎨 UI Implementation - Session 2
 

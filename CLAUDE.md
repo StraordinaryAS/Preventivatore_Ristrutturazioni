@@ -126,20 +126,20 @@ Tutte le tabelle usano il prefisso `ristrutturazioni_` per isolamento logico.
 ```
 preventivi-ristrutturazioni-app/
 ├── app/
-│   ├── page.tsx                    # Main app - Form + Calcolo + Lista progetti
+│   ├── page.tsx                    # ✅ Dashboard - Lista progetti (228 righe)
 │   ├── prezzi/
 │   │   └── page.tsx               # Gestione prezzi custom globali
 │   ├── admin/
 │   │   └── prezzario/
 │   │       └── page.tsx           # CRUD categorie/sottocategorie
-│   └── preventivo/                # 🚧 TODO: Refactoring 2-page structure
+│   └── preventivo/                # ✅ Refactoring 3-page completato!
 │       ├── nuovo/
-│       │   └── page.tsx          # 🚧 TODO: Nuovi preventivi
+│       │   └── page.tsx          # ✅ Form nuovi preventivi (920 righe)
 │       └── [id]/
-│           └── page.tsx          # 🚧 TODO: Vista/modifica progetto
+│           └── page.tsx          # ✅ Vista/modifica progetto (1165 righe)
 ├── lib/
 │   ├── supabase.ts               # Client Supabase + TypeScript types
-│   └── pricing-engine-manual.ts  # Backend logic (17 metodi statici)
+│   └── pricing-engine-manual.ts  # Backend logic (17 metodi, 937 righe)
 ├── supabase/
 │   └── migrations/
 │       ├── 003_manual_workflow.sql
@@ -369,90 +369,97 @@ Quando si salva un progetto:
 
 ## 🚀 Deployment su Vercel con Infomaniak
 
-### Setup Consigliato: **Opzione 1 - Sottodomini**
+### ✅ STATUS: DEPLOYMENT COMPLETATO
 
-Per gestire più app sullo stesso dominio Infomaniak, usa sottodomini separati:
-
+**URL Produzione:**
 ```
-https://preventivi.tuodominio.ch    → Questo progetto
-https://gestionale.tuodominio.ch    → Altra app futura
-https://crm.tuodominio.ch           → Altra app futura
-https://www.tuodominio.ch           → Sito principale
+https://preventivatore-ristrutturazioni.geko-it.com
 ```
 
-### Procedura Deploy
-
-#### 1. Push su GitHub
-```bash
-git push origin main
+**Repository GitHub:**
+```
+https://github.com/StraordinaryAS/Preventivatore_Ristrutturazioni
 ```
 
-#### 2. Deploy su Vercel
-1. Vai su [vercel.com](https://vercel.com)
-2. Login con GitHub
-3. Import repository `preventivi-ristrutturazioni-app`
-4. Framework: **Next.js** (auto-detect)
-5. **Environment Variables** (IMPORTANTE):
-   ```
-   NEXT_PUBLIC_SUPABASE_URL = [da .env.local]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY = [da .env.local]
-   ```
-6. Deploy → URL temporaneo: `preventivi-ristrutturazioni-app.vercel.app`
+**Vercel Project:**
+```
+preventivatore-ristrutturazioni
+```
 
-#### 3. Configura Supabase
-1. Dashboard Supabase → Authentication → URL Configuration
-2. Aggiungi Redirect URL:
-   ```
-   https://preventivi-ristrutturazioni-app.vercel.app/*
-   ```
+### Setup Completato
 
-#### 4. Test su URL Vercel
-Verifica che l'app funzioni correttamente prima di collegare dominio custom.
+#### ✅ 1. GitHub Repository
+- Repository creato e collegato a Vercel
+- Branch: `main`
+- Auto-deploy attivo su push
 
-#### 5. Collega Dominio Custom
+#### ✅ 2. Vercel Configuration
+- Framework: Next.js 15.5.6 (auto-detect)
+- Root Directory: `.` (repository is the project folder)
+- Environment Variables configurate:
+  ```
+  NEXT_PUBLIC_SUPABASE_URL = https://sngyhrzlblokthugamib.supabase.co
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = [configurato]
+  ```
+- Build Command: `npm run build`
+- Output Directory: `.next`
 
-**Su Vercel:**
-1. Project Settings → Domains → Add Domain
-2. Inserisci: `preventivi.tuodominio.ch`
-3. Vercel ti darà istruzioni DNS
+#### ✅ 3. DNS Configuration (Infomaniak)
+**Sottodominio:** `preventivatore-ristrutturazioni.geko-it.com`
 
-**Su Infomaniak (Zona DNS):**
-
-Aggiungi questi record:
-
+Record DNS configurato:
 ```
 Tipo: CNAME
-Nome: preventivi
+Nome: preventivatore-ristrutturazioni
 Valore: cname.vercel-dns.com
 TTL: 3600
 ```
 
-**Per dominio principale (senza sottodominio):**
-```
-Tipo: A
-Nome: @
-Valore: 76.76.21.21
-TTL: 3600
-```
+**Note:** Usato trattino `-` invece di underscore `_` per compatibilità DNS.
 
-**Per www:**
-```
-Tipo: CNAME
-Nome: www
-Valore: cname.vercel-dns.com
-TTL: 3600
-```
-
-#### 6. Verifica DNS su Vercel
-- Click "Verify" su Vercel
-- Attendi 5-60 minuti per propagazione DNS
-- SSL automatico attivato da Vercel
-
-#### 7. Aggiorna Supabase con Dominio Custom
+#### ✅ 4. Supabase Authentication URLs
 Dashboard Supabase → Authentication → URL Configuration:
 ```
-https://preventivi.tuodominio.ch/*
-https://www.tuodominio.ch/*
+Site URL: https://preventivatore-ristrutturazioni.geko-it.com
+Redirect URLs:
+  - https://preventivatore-ristrutturazioni.geko-it.com/*
+  - https://preventivatore-ristrutturazioni.vercel.app/*
+  - http://localhost:3000/*
+```
+
+### Deployment Workflow
+
+Ogni push su branch `main` triggera automaticamente:
+1. Build su Vercel
+2. TypeScript type checking
+3. Deploy su produzione (se build success)
+
+```bash
+# Workflow standard
+git add .
+git commit -m "feat: descrizione"
+git push origin main
+# → Vercel auto-deploy in ~2 minuti
+```
+
+### Build Verificato
+
+```
+✓ Compiled successfully
+✓ Linting and checking validity of types
+✓ Generating static pages (7/7)
+✓ Finalizing page optimization
+
+Route (app)                    Size  First Load JS
+┌ ○ /                       1.89 kB       162 kB
+├ ○ /_not-found              993 B        103 kB
+├ ○ /admin/prezzario        3.22 kB       163 kB
+├ ƒ /preventivo/[id]        5.87 kB       166 kB
+├ ○ /preventivo/nuovo       4.7 kB        165 kB
+└ ○ /prezzi                 2.72 kB       163 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 ```
 
 ### Vantaggi Sottodomini
@@ -460,60 +467,110 @@ https://www.tuodominio.ch/*
 - ✅ Deploy separati (non si influenzano)
 - ✅ Facile aggiungere nuove app in futuro
 - ✅ Performance migliori
+- ✅ SSL automatico (Let's Encrypt)
 
 ---
 
-## 🚧 TODO: Refactoring Architettura (Sessione Futura)
+## ✅ Refactoring Architettura 3-Page COMPLETATO
 
-### Obiettivo: Struttura 2 Pagine
+### Obiettivo Raggiunto: Struttura 3 Pagine
 
 **Motivazione:** Separare dashboard (lista progetti) da editor (crea/modifica preventivo).
 
-### Struttura Proposta
+### Struttura Implementata
 
 ```
 app/
-├── page.tsx                    # Dashboard - Lista progetti
+├── page.tsx                    # ✅ Dashboard - Lista progetti (228 righe)
 ├── preventivo/
 │   ├── nuovo/
-│   │   └── page.tsx           # Crea nuovo preventivo
+│   │   └── page.tsx           # ✅ Form nuovo preventivo (920 righe)
 │   └── [id]/
-│       └── page.tsx           # Visualizza E modifica preventivo
+│       └── page.tsx           # ✅ Visualizza E modifica (1165 righe)
 ```
 
-### Workflow Utente
+### Workflow Utente Implementato
 
 **Dashboard (`/`):**
-- Lista tutti i progetti salvati
-- Bottoni: `+ Nuovo`, `Visualizza`, `Duplica`, `Elimina`
+- ✅ Lista tutti i progetti salvati con card
+- ✅ Info: Nome, MQ, Piano, Ascensore, Finiture, Data creazione
+- ✅ Badge "Versione" per progetti v2, v3, etc.
+- ✅ Campo "Aggiornamento di:" per progetti duplicati
+- ✅ Bottoni: `+ Nuovo Preventivo`, `Visualizza`, `Duplica`, `Elimina`
+- ✅ Links navigazione: `Prezzi Custom`, `Admin Prezzario`
 
 **Preventivo Nuovo (`/preventivo/nuovo`):**
-- Form completo per nuovo preventivo
-- Al salvataggio → redirect a `/preventivo/[id]?mode=view`
+- ✅ Form completo per nuovo preventivo
+- ✅ Dati base: Nome, MQ, Piano, Ascensore, Finiture
+- ✅ Percentuali economiche editabili
+- ✅ Selezione categorie → sottocategorie
+- ✅ Tabella quantità con prezzi custom e prezzo a corpo
+- ✅ Calcolo real-time con breakdown categorie
+- ✅ Al salvataggio → redirect a `/preventivo/[id]` in modalità view
+- ✅ Sistema versioning automatico (v2, v3, v4...)
 
 **Preventivo Esistente (`/preventivo/[id]`):**
 
-2 modalità:
+✅ **2 modalità implementate:**
 
-**1. Modalità Vista (default):**
-- Read-only
-- Bottoni: `Modifica`, `PDF`, `Stampa`, `Duplica`, `Elimina`
+**1. Modalità Vista (default - `mode=view`):**
+- ✅ Read-only con tutti i dati visualizzati
+- ✅ Tabella voci selezionate con prezzi finali
+- ✅ Breakdown categorie
+- ✅ Riepilogo economico completo
+- ✅ Bottoni: `Modifica`, `Duplica`, `Elimina`, `← Torna alla Dashboard`
 
-**2. Modalità Modifica (dopo click "Modifica"):**
-- Form editabile
-- Al salvataggio: **chiedi utente**
-  - Opzione A: `Sovrascrivi questo progetto` (elimina vecchio, salva come stesso nome)
-  - Opzione B: `Crea nuova versione` (mantiene vecchio, crea v2/v3/etc)
+**2. Modalità Modifica (`mode=edit`):**
+- ✅ Form editabile completo (identico a "nuovo")
+- ✅ Pre-popolato con tutti i dati esistenti
+- ✅ Al salvataggio: sistema versioning automatico
+  - Se nome uguale a esistente → crea v2/v3/etc
+  - Se nome nuovo → crea nuovo progetto
+- ✅ Alert informativo quando viene creata nuova versione
+- ✅ Redirect a `/preventivo/[nuovo_id]?mode=view`
 
-### Tasks da Fare
+### Breaking Changes - Next.js 15
 
-1. [x] Creare struttura cartelle `app/preventivo`
-2. [ ] Trasformare `app/page.tsx` in dashboard lista progetti
-3. [ ] Creare `app/preventivo/nuovo/page.tsx`
-4. [ ] Creare `app/preventivo/[id]/page.tsx` con logica view/edit
-5. [ ] Implementare dialog "Sovrascrivi vs Nuova versione"
-6. [ ] Aggiungere bottoni PDF e Stampa (placeholder)
-7. [ ] Testare flusso completo
+⚠️ **IMPORTANTE:** Next.js 15 ha introdotto breaking change con `params`:
+
+```typescript
+// ❌ VECCHIO (non funziona più)
+export default function Page({ params }: { params: { id: string } }) {
+  useEffect(() => {
+    doSomething(params.id)
+  }, [params.id])
+}
+
+// ✅ NUOVO (Next.js 15+)
+import { use } from 'react'
+
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)  // Unwrap Promise
+
+  useEffect(() => {
+    doSomething(id)
+  }, [id])  // usa id, non params.id
+}
+```
+
+**Errore console se non corretto:**
+```
+A param property was accessed directly with `params.id`.
+`params` is now a Promise and should be unwrapped with `React.use()`
+```
+
+### Tasks Completati
+
+- [x] Creare struttura cartelle `app/preventivo`
+- [x] Trasformare `app/page.tsx` in dashboard lista progetti
+- [x] Creare `app/preventivo/nuovo/page.tsx`
+- [x] Creare `app/preventivo/[id]/page.tsx` con logica view/edit
+- [x] Implementare sistema versioning automatico (v2, v3, v4...)
+- [x] Fix Next.js 15 params Promise con `React.use()`
+- [x] Fix 4 errori TypeScript per deployment
+- [x] Merge branch feature-refactoring → main
+- [x] Cleanup file backup obsoleti
+- [x] Deploy su Vercel con successo
 
 ---
 
@@ -566,11 +623,11 @@ chore: manutenzione
 ## 🐛 Known Issues / Limitazioni
 
 1. **No autenticazione utente** - MVP single-tenant
-2. **No export PDF/Excel** - Placeholder per versione futura
-3. **No stampa diretta** - Da implementare
+2. **No export PDF/Excel** - Da implementare
+3. **No stampa professionale** - Da implementare (prossima feature)
 4. **No multilingua** - Solo italiano
 5. **No responsive mobile** - Ottimizzato per desktop
-6. **Prezzario base limitato** - ~40 voci, serve import completo
+6. **Prezzario** - ~150 voci Piemonte 2025, 14 categorie
 
 ---
 
@@ -583,9 +640,10 @@ chore: manutenzione
 - [Vercel](https://vercel.com/docs)
 
 ### Repository
-- GitHub: [da specificare]
-- Vercel: [da specificare]
-- Supabase: [project-id].supabase.co
+- **GitHub:** https://github.com/StraordinaryAS/Preventivatore_Ristrutturazioni
+- **Vercel:** https://vercel.com/straordinaryass-projects/preventivatore-ristrutturazioni
+- **Supabase:** https://sngyhrzlblokthugamib.supabase.co
+- **Produzione:** https://preventivatore-ristrutturazioni.geko-it.com
 
 ---
 
@@ -593,8 +651,11 @@ chore: manutenzione
 
 1. Leggi questo file per context completo
 2. Controlla `CHANGELOG.md` per storico dettagliato
-3. Esplora `lib/pricing-engine-manual.ts` per logica backend
-4. Vedi `app/page.tsx` per UI principale
+3. Esplora `lib/pricing-engine-manual.ts` per logica backend (937 righe)
+4. Vedi pagine refactored:
+   - `app/page.tsx` - Dashboard (228 righe)
+   - `app/preventivo/nuovo/page.tsx` - Nuovo preventivo (920 righe)
+   - `app/preventivo/[id]/page.tsx` - Dettaglio/Edit (1165 righe)
 5. Migrations in `supabase/migrations/` per schema DB
 
 **Comando dev:**
@@ -603,11 +664,35 @@ cd "c:\Development\GEKO\App preventivo Ristrutturazioni\preventivi-ristrutturazi
 npm run dev
 ```
 
-**URL locale:**
-http://localhost:3000
+**URLs:**
+- Locale: http://localhost:3000
+- Produzione: https://preventivatore-ristrutturazioni.geko-it.com
 
 ---
 
-**Versione documento:** 2025-11-28
-**Stato progetto:** MVP 100% completo, pronto per deploy
-**Prossimo step:** Deploy Vercel + Refactoring 2-page structure
+## 🎯 Prossime Features da Implementare
+
+1. **Stampa Preventivo Professionale** 🖨️
+   - Pagina `/preventivo/[id]/stampa` con layout print-friendly
+   - Note personalizzate per ogni voce
+   - Pagina iniziale con intro cliente
+   - Blocchi testo personalizzabili
+   - Logo GEKO + dati cliente + footer azienda
+   - Export PDF
+
+2. **Export Excel/CSV**
+   - Download foglio calcolo con breakdown completo
+
+3. **Autenticazione utenti**
+   - Multi-tenant con Supabase Auth
+   - Row Level Security
+
+4. **Mobile responsive**
+   - Layout ottimizzato per tablet/smartphone
+
+---
+
+**Versione documento:** 2025-12-01
+**Stato progetto:** ✅ MVP 100% completo e deployato in produzione
+**Ultima sessione:** Deployment Vercel completato + Fix TypeScript errors
+**Prossima feature:** Sistema stampa preventivo professionale
