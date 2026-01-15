@@ -276,6 +276,12 @@ export default function AdminPrezzarioPage() {
             </div>
             <div className="flex gap-2">
               <Link
+                href="/admin/import"
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+              >
+                📥 Importa CSV
+              </Link>
+              <Link
                 href="/prezzi"
                 className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700"
               >

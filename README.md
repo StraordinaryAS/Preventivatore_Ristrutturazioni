@@ -2,6 +2,12 @@
 
 Webapp per generare preventivi veloci per ristrutturazioni appartamenti in Piemonte.
 
+## URL Applicazione
+
+**Produzione:** https://preventivatore-ristrutturazioni.geko-it.com
+
+**Sviluppo locale:** http://localhost:3000
+
 ## Setup
 
 ### 1. Installa dipendenze
