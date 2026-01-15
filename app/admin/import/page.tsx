@@ -7,6 +7,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 interface ImportResult {
   success: boolean
   message: string
