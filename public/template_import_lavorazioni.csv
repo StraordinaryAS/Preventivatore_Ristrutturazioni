@@ -1,35 +1,147 @@
 categoria_codice,categoria_nome,sottocategoria_codice,sottocategoria_nome,unita_misura,prezzo_economy,prezzo_standard,prezzo_premium,note,ordine_categoria,ordine_sottocategoria,applica_fattore_accesso
-01,DEMOLIZIONI,01.01,Demolizione pavimenti esistenti con smaltimento,mq,0,0,0,,1,1,SI
-01,DEMOLIZIONI,01.02,Demolizione rivestimenti ceramici con smaltimento,mq,0,0,0,,1,2,SI
-01,DEMOLIZIONI,01.03,Demolizione tramezzi in muratura con smaltimento,mq,0,0,0,,1,3,SI
-01,DEMOLIZIONI,01.04,Rimozione sanitari e smaltimento,pz,0,0,0,,1,4,SI
-02,MURATURE,02.01,Tramezzo in muratura intonacato (sp. 8-10 cm),mq,0,0,0,,2,1,SI
-02,MURATURE,02.02,Intonaco civile su pareti,mq,0,0,0,,2,2,SI
-02,MURATURE,02.03,Massetto alleggerito per pavimenti (sp. 5 cm),mq,0,0,0,,2,3,SI
-03,CARTONGESSO,03.01,Parete in cartongesso con isolamento (sp. 10 cm),mq,0,0,0,,3,1,SI
-03,CARTONGESSO,03.02,Controsoffitto in cartongesso,mq,0,0,0,,3,2,SI
-04,IMPIANTI ELETTRICI,04.01,Punto luce completo (interruttore + cablaggio),pz,0,0,0,,4,1,SI
-04,IMPIANTI ELETTRICI,04.02,Presa elettrica completa (presa + cablaggio),pz,0,0,0,,4,2,SI
-04,IMPIANTI ELETTRICI,04.03,Quadro elettrico completo (6-12 moduli),cad,0,0,0,,4,3,NO
-04,IMPIANTI ELETTRICI,04.04,Impianto domotico base (1 ambiente),cad,0,0,0,,4,4,NO
-05,IMPIANTI IDRAULICI,05.01,Impianto idrico-sanitario bagno completo,cad,0,0,0,,5,1,SI
-05,IMPIANTI IDRAULICI,05.02,Punto acqua cucina (carico/scarico),pz,0,0,0,,5,2,SI
-05,IMPIANTI IDRAULICI,05.03,Punto gas cucina con certificazione,pz,0,0,0,,5,3,SI
-06,IMPIANTI TERMICI,06.01,Radiatore in alluminio (600-800W),pz,0,0,0,,6,1,SI
-06,IMPIANTI TERMICI,06.02,Caldaia a condensazione (24 kW),cad,0,0,0,,6,2,NO
-06,IMPIANTI TERMICI,06.03,Impianto radiante a pavimento,mq,0,0,0,,6,3,SI
-07,PAVIMENTI,07.01,Pavimento in gres porcellanato 60x60 con posa,mq,0,0,0,,7,1,SI
-07,PAVIMENTI,07.02,Parquet prefinito con posa flottante,mq,0,0,0,,7,2,SI
-07,PAVIMENTI,07.03,Battiscopa coordinato con posa,ml,0,0,0,,7,3,SI
-08,RIVESTIMENTI,08.01,Rivestimento ceramico bagno 30x60 con posa,mq,0,0,0,,8,1,SI
-08,RIVESTIMENTI,08.02,Rivestimento cucina (zona cottura),mq,0,0,0,,8,2,SI
-09,SERRAMENTI INTERNI,09.01,Porta interna battente con telaio e posa,pz,0,0,0,,9,1,SI
-09,SERRAMENTI INTERNI,09.02,Porta scorrevole a scomparsa con posa,pz,0,0,0,,9,2,SI
-10,TINTEGGIATURE,10.01,Tinteggiatura pareti con idropittura lavabile,mq,0,0,0,,10,1,SI
-10,TINTEGGIATURE,10.02,Tinteggiatura soffitti,mq,0,0,0,,10,2,SI
-11,SANITARI E ACCESSORI,11.01,WC con cassetta e sedile,pz,0,0,0,,11,1,SI
-11,SANITARI E ACCESSORI,11.02,Lavabo con colonna o sospeso,pz,0,0,0,,11,2,SI
-11,SANITARI E ACCESSORI,11.03,Piatto doccia 80x80 con box cristallo,cad,0,0,0,,11,3,SI
-11,SANITARI E ACCESSORI,11.04,Rubinetteria bagno completa (3 pezzi),set,0,0,0,,11,4,SI
-12,EXTRA CANTIERE,12.01,Protezioni e pulizie cantiere,mq,0,0,0,,12,1,NO
-12,EXTRA CANTIERE,12.02,Trasporti e movimentazioni materiali,mq,0,0,0,,12,2,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_01,Demolizione tramezzi in laterizio/intonaco,mq,0,0,0,,1,1,SI
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_02,Demolizione tramezzi in cartongesso,mq,0,0,0,,1,2,SI
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_03,Demolizione controsoffitti,mq,0,0,0,,1,3,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_04,Demolizione pavimenti e sottofondi,mq,0,0,0,,1,4,SI
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_05,Demolizione rivestimenti ceramici,mq,0,0,0,,1,5,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_06,Demolizione massetti,mq,0,0,0,,1,6,SI
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_07,Demolizione intonaci interni,mq,0,0,0,,1,7,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_08,Smontaggio sanitari e rubinetterie,cad,0,0,0,,1,8,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_09,Smontaggio porte interne,cad,0,0,0,,1,9,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_10,Smontaggio radiatori,cad,0,0,0,,1,10,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_11,Rimozione tubazioni idriche,ml,0,0,0,,1,11,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_12,Rimozione canalizzazioni elettriche,ml,0,0,0,,1,12,NO
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_13,Smaltimento rifiuti inerti,t,0,0,0,,1,13,SI
+DEM,"Demolizioni, rimozioni, smaltimenti",DEM_14,Smaltimento rifiuti misti,t,0,0,0,,1,14,SI
+MUR,Opere murarie e strutturali leggere,MUR_01,Tramezzi in laterizio forato sp. 8cm,mq,0,0,0,,2,1,SI
+MUR,Opere murarie e strutturali leggere,MUR_02,Tramezzi in laterizio forato sp. 12cm,mq,0,0,0,,2,2,SI
+MUR,Opere murarie e strutturali leggere,MUR_03,Tramezzi in blocchi gasbeton,mq,0,0,0,,2,3,SI
+MUR,Opere murarie e strutturali leggere,MUR_04,Intonaco civile su nuove murature,mq,0,0,0,,2,4,NO
+MUR,Opere murarie e strutturali leggere,MUR_05,Rasatura su intonaco esistente,mq,0,0,0,,2,5,NO
+MUR,Opere murarie e strutturali leggere,MUR_06,Intonaco deumidificante,mq,0,0,0,,2,6,NO
+MUR,Opere murarie e strutturali leggere,MUR_07,Sottofondo alleggerito,mq,0,0,0,,2,7,SI
+MUR,Opere murarie e strutturali leggere,MUR_08,Massetto tradizionale sp. 5cm,mq,0,0,0,,2,8,SI
+MUR,Opere murarie e strutturali leggere,MUR_09,Massetto autolivellante,mq,0,0,0,,2,9,NO
+MUR,Opere murarie e strutturali leggere,MUR_10,Massetto per impianto radiante,mq,0,0,0,,2,10,SI
+MUR,Opere murarie e strutturali leggere,MUR_11,Formazione soglie interne,cad,0,0,0,,2,11,NO
+MUR,Opere murarie e strutturali leggere,MUR_12,Fori passanti in muratura,cad,0,0,0,,2,12,NO
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_01,Controparete in cartongesso semplice,mq,0,0,0,,3,1,SI
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_02,Controparete con isolamento termico,mq,0,0,0,,3,2,SI
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_03,Controparete con isolamento acustico,mq,0,0,0,,3,3,SI
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_04,Controsoffitto in lastre cartongesso,mq,0,0,0,,3,4,NO
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_05,Controsoffitto ispezionabile con pannelli,mq,0,0,0,,3,5,NO
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_06,Velette e ribassamenti per luce indiretta,ml,0,0,0,,3,6,NO
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_07,Parete divisoria cartongesso singolo strato,mq,0,0,0,,3,7,SI
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_08,Parete divisoria cartongesso doppio strato,mq,0,0,0,,3,8,SI
+CGE,"Cartongesso, contropareti, controsoffitti",CGE_09,Parete acustica rinforzata,mq,0,0,0,,3,9,SI
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_01,Gres porcellanato 60x60 (forn.+posa),mq,0,0,0,,4,1,SI
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_02,Gres porcellanato 80x80 (forn.+posa),mq,0,0,0,,4,2,SI
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_03,Gres effetto legno (forn.+posa),mq,0,0,0,,4,3,SI
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_04,Parquet prefinto rovere (forn.+posa),mq,0,0,0,,4,4,SI
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_05,Parquet prefinto essenze pregiate (forn.+posa),mq,0,0,0,,4,5,SI
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_06,Laminato AC4-AC5 (forn.+posa),mq,0,0,0,,4,6,NO
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_07,PVC/LVT (forn.+posa),mq,0,0,0,,4,7,NO
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_08,Rivestimento ceramico bagno 20x60,mq,0,0,0,,4,8,NO
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_09,Rivestimento ceramico bagno 30x90,mq,0,0,0,,4,9,NO
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_10,Rivestimento cucina paraschizzi,mq,0,0,0,,4,10,NO
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_11,Battiscopa ceramica coordinato,ml,0,0,0,,4,11,NO
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_12,Battiscopa legno/MDF,ml,0,0,0,,4,12,NO
+PAV,"Pavimenti, rivestimenti e sottofondi",PAV_13,Soglie di passaggio,cad,0,0,0,,4,13,NO
+SER,Serramenti interni ed esterni,SER_01,Porta interna battente tamburata (forn.+posa),cad,0,0,0,,5,1,SI
+SER,Serramenti interni ed esterni,SER_02,Porta interna battente listellare (forn.+posa),cad,0,0,0,,5,2,SI
+SER,Serramenti interni ed esterni,SER_03,Porta scorrevole interno muro (forn.+posa),cad,0,0,0,,5,3,SI
+SER,Serramenti interni ed esterni,SER_04,Porta scorrevole esterno muro (forn.+posa),cad,0,0,0,,5,4,SI
+SER,Serramenti interni ed esterni,SER_05,Porta REI 60 per ingresso (forn.+posa),cad,0,0,0,,5,5,SI
+SER,Serramenti interni ed esterni,SER_06,Finestra PVC 2 ante (forn.+posa),cad,0,0,0,,5,6,SI
+SER,Serramenti interni ed esterni,SER_07,Finestra legno 2 ante (forn.+posa),cad,0,0,0,,5,7,SI
+SER,Serramenti interni ed esterni,SER_08,Finestra alluminio taglio termico (forn.+posa),cad,0,0,0,,5,8,SI
+SER,Serramenti interni ed esterni,SER_09,Portafinestra 1 anta (forn.+posa),cad,0,0,0,,5,9,SI
+SER,Serramenti interni ed esterni,SER_10,Tapparelle con cassonetto,cad,0,0,0,,5,10,SI
+SER,Serramenti interni ed esterni,SER_11,Davanzale interno marmo/agglomerato,ml,0,0,0,,5,11,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_01,Quadro elettrico generale (forn.+posa),cad,0,0,0,,6,1,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_02,Interruttore differenziale,cad,0,0,0,,6,2,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_03,Punto luce (plafoniera/centro stanza),cad,0,0,0,,6,3,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_04,Punto comando (interruttore/deviatore),cad,0,0,0,,6,4,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_05,Presa standard 10/16A,cad,0,0,0,,6,5,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_06,Presa dedicata forno,cad,0,0,0,,6,6,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_07,Presa dedicata piano induzione,cad,0,0,0,,6,7,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_08,Presa dedicata climatizzatore,cad,0,0,0,,6,8,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_09,Presa TV/SAT,cad,0,0,0,,6,9,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_10,Presa dati RJ45,cad,0,0,0,,6,10,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_11,Impianto elettrico livello L1 (base),cad,0,0,0,,6,11,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_12,Impianto elettrico livello L2 (standard),cad,0,0,0,,6,12,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_13,Impianto elettrico livello L3 (domotica),cad,0,0,0,,6,13,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_14,Termostato smart Wi-Fi,cad,0,0,0,,6,14,NO
+ELE,"Impianto elettrico, dati, domotica",ELE_15,Modulo relè Wi-Fi per luci/prese,cad,0,0,0,,6,15,NO
+IDR,Impianto idrico-sanitario e gas,IDR_01,Impianto idrico-sanitario bagno completo,cad,0,0,0,,7,1,NO
+IDR,Impianto idrico-sanitario e gas,IDR_02,Piatto doccia 70x90 + box cristallo,cad,0,0,0,,7,2,SI
+IDR,Impianto idrico-sanitario e gas,IDR_03,Piatto doccia 80x120 + box cristallo,cad,0,0,0,,7,3,SI
+IDR,Impianto idrico-sanitario e gas,IDR_04,Vasca da bagno standard,cad,0,0,0,,7,4,SI
+IDR,Impianto idrico-sanitario e gas,IDR_05,WC sospeso con cassetta incasso,cad,0,0,0,,7,5,NO
+IDR,Impianto idrico-sanitario e gas,IDR_06,WC a terra,cad,0,0,0,,7,6,NO
+IDR,Impianto idrico-sanitario e gas,IDR_07,Lavabo sospeso con rubinetteria,cad,0,0,0,,7,7,NO
+IDR,Impianto idrico-sanitario e gas,IDR_08,Bidet sospeso con rubinetteria,cad,0,0,0,,7,8,NO
+IDR,Impianto idrico-sanitario e gas,IDR_09,Rubinetteria bagno completa (economy),set,0,0,0,,7,9,NO
+IDR,Impianto idrico-sanitario e gas,IDR_10,Collettore acqua sanitaria,cad,0,0,0,,7,10,NO
+IDR,Impianto idrico-sanitario e gas,IDR_11,Punto acqua cucina (fredda/calda),cad,0,0,0,,7,11,NO
+IDR,Impianto idrico-sanitario e gas,IDR_12,Scarico cucina/lavastoviglie,cad,0,0,0,,7,12,NO
+IDR,Impianto idrico-sanitario e gas,IDR_13,Linea gas cucina,cad,0,0,0,,7,13,NO
+IDR,Impianto idrico-sanitario e gas,IDR_14,Linea gas caldaia,cad,0,0,0,,7,14,NO
+TER,"Impianto termico, raffrescamento, VMC",TER_01,Caldaia a condensazione 24kW (forn.+posa),cad,0,0,0,,8,1,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_02,Caldaia a condensazione 32kW (forn.+posa),cad,0,0,0,,8,2,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_03,Radiatore in alluminio 800mm (forn.+posa),cad,0,0,0,,8,3,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_04,Radiatore in acciaio tubolare (forn.+posa),cad,0,0,0,,8,4,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_05,Termoarredo bagno (forn.+posa),cad,0,0,0,,8,5,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_06,Valvole termostatiche,cad,0,0,0,,8,6,NO
+TER,"Impianto termico, raffrescamento, VMC",TER_07,Impianto radiante a pavimento,mq,0,0,0,,8,7,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_08,Collettore riscaldamento con regolazione,cad,0,0,0,,8,8,NO
+TER,"Impianto termico, raffrescamento, VMC",TER_09,Pompa di calore aria-acqua (forn.+posa),cad,0,0,0,,8,9,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_10,Split mono 9000 BTU (forn.+posa),cad,0,0,0,,8,10,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_11,Split mono 12000 BTU (forn.+posa),cad,0,0,0,,8,11,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_12,Multi-split 2 unità interne (forn.+posa),cad,0,0,0,,8,12,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_13,VMC puntuale singola stanza,cad,0,0,0,,8,13,NO
+TER,"Impianto termico, raffrescamento, VMC",TER_14,VMC canalizzata completa,cad,0,0,0,,8,14,SI
+TER,"Impianto termico, raffrescamento, VMC",TER_15,Cronotermostato ambiente,cad,0,0,0,,8,15,NO
+ISO,Isolamenti termici e acustici interni,ISO_01,Isolamento controparete lana minerale 6cm,mq,0,0,0,,9,1,NO
+ISO,Isolamenti termici e acustici interni,ISO_02,Isolamento controparete lana minerale 10cm,mq,0,0,0,,9,2,NO
+ISO,Isolamenti termici e acustici interni,ISO_03,Isolamento EPS per controparete,mq,0,0,0,,9,3,NO
+ISO,Isolamenti termici e acustici interni,ISO_04,Isolamento XPS per controparete,mq,0,0,0,,9,4,NO
+ISO,Isolamenti termici e acustici interni,ISO_05,Materassino anticalpestio 3mm,mq,0,0,0,,9,5,NO
+ISO,Isolamenti termici e acustici interni,ISO_06,Materassino anticalpestio 5mm,mq,0,0,0,,9,6,NO
+ISO,Isolamenti termici e acustici interni,ISO_07,Pannelli fonoassorbenti parete/soffitto,mq,0,0,0,,9,7,NO
+FIN,Finiture e tinteggiature,FIN_01,Rasatura pareti e soffitti,mq,0,0,0,,10,1,NO
+FIN,Finiture e tinteggiature,FIN_02,Stuccatura e carteggiatura,mq,0,0,0,,10,2,NO
+FIN,Finiture e tinteggiature,FIN_03,Primer fissativo,mq,0,0,0,,10,3,NO
+FIN,Finiture e tinteggiature,FIN_04,Pittura lavabile 2 mani,mq,0,0,0,,10,4,NO
+FIN,Finiture e tinteggiature,FIN_05,Pittura traspirante 2 mani,mq,0,0,0,,10,5,NO
+FIN,Finiture e tinteggiature,FIN_06,Pittura antimuffa,mq,0,0,0,,10,6,NO
+FIN,Finiture e tinteggiature,FIN_07,Smalto su superfici metalliche,mq,0,0,0,,10,7,NO
+FIN,Finiture e tinteggiature,FIN_08,Pittura decorativa effetto spatolato,mq,0,0,0,,10,8,NO
+FIN,Finiture e tinteggiature,FIN_09,Carta da parati (forn.+posa),mq,0,0,0,,10,9,NO
+FAL,Opere da falegname / arredi fissi,FAL_01,Boiserie rivestimento parete legno,mq,0,0,0,,11,1,SI
+FAL,Opere da falegname / arredi fissi,FAL_02,Mobile bagno su misura sospeso,cad,0,0,0,,11,2,SI
+FAL,Opere da falegname / arredi fissi,FAL_03,Mobile bagno su misura a terra,cad,0,0,0,,11,3,SI
+FAL,Opere da falegname / arredi fissi,FAL_04,Piano cucina laminato,ml,0,0,0,,11,4,NO
+FAL,Opere da falegname / arredi fissi,FAL_05,Piano cucina quarzo/agglomerato,ml,0,0,0,,11,5,NO
+EXT,"Extra cantiere, oneri accesso, logistica",EXT_01,Protezione pavimenti esistenti,mq,0,0,0,,12,1,NO
+EXT,"Extra cantiere, oneri accesso, logistica",EXT_02,Barriere antipolvere (zip wall),ml,0,0,0,,12,2,NO
+EXT,"Extra cantiere, oneri accesso, logistica",EXT_03,Trasporto materiali,giorno,0,0,0,,12,3,SI
+EXT,"Extra cantiere, oneri accesso, logistica",EXT_04,Nolo montascale/montacarichi,giorno,0,0,0,,12,4,NO
+EXT,"Extra cantiere, oneri accesso, logistica",EXT_05,OSP (occupazione suolo pubblico),mese,0,0,0,,12,5,NO
+EXT,"Extra cantiere, oneri accesso, logistica",EXT_06,Pulizia grossolana di cantiere,giorno,0,0,0,,12,6,NO
+EXT,"Extra cantiere, oneri accesso, logistica",EXT_07,Pulizia fine lavori completa,cad,0,0,0,,12,7,NO
+SIC,Sicurezza in cantiere,SIC_01,Redazione PSC (Piano Sicurezza Coordinamento),cad,0,0,0,,13,1,NO
+SIC,Sicurezza in cantiere,SIC_02,CSE (Coordinamento Sicurezza Esecuzione),cad,0,0,0,,13,2,NO
+SIC,Sicurezza in cantiere,SIC_03,POS (Piano Operativo Sicurezza),cad,0,0,0,,13,3,NO
+SIC,Sicurezza in cantiere,SIC_04,Parapetti provvisori,ml,0,0,0,,13,4,NO
+SIC,Sicurezza in cantiere,SIC_05,Protezioni aperture,cad,0,0,0,,13,5,NO
+SIC,Sicurezza in cantiere,SIC_06,Segnaletica di sicurezza,set,0,0,0,,13,6,NO
+PRA,Pratiche tecniche e amministrative,PRA_01,CILA (Comunicazione Inizio Lavori Asseverata),cad,0,0,0,,14,1,NO
+PRA,Pratiche tecniche e amministrative,PRA_02,SCIA (Segnalazione Certificata Inizio Attività),cad,0,0,0,,14,2,NO
+PRA,Pratiche tecniche e amministrative,PRA_03,Progettazione architettonica,cad,0,0,0,,14,3,NO
+PRA,Pratiche tecniche e amministrative,PRA_04,Direzione lavori,cad,0,0,0,,14,4,NO
+PRA,Pratiche tecniche e amministrative,PRA_05,CSP (Coordinamento Sicurezza Progettazione),cad,0,0,0,,14,5,NO
+PRA,Pratiche tecniche e amministrative,PRA_06,APE post-intervento,cad,0,0,0,,14,6,NO
+PRA,Pratiche tecniche e amministrative,PRA_07,Relazione Legge 10,cad,0,0,0,,14,7,NO
+PRA,Pratiche tecniche e amministrative,PRA_08,DOCFA (aggiornamento catastale),cad,0,0,0,,14,8,NO
+PRA,Pratiche tecniche e amministrative,PRA_09,Diritti di segreteria comunale,cad,0,0,0,,14,9,NO
